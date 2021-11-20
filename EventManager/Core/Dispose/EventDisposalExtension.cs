@@ -1,8 +1,8 @@
-﻿namespace LP.EventManager.Events.Dispose
+﻿namespace Depra.EventManager.Core.Dispose
 {
     public static class EventDisposalExtension
     {
-        public static Container.DisposeContainer AddTo(this Container.DisposeContainer container, EventDisposal disposal)
+        public static DisposeContainer AddTo(this DisposeContainer container, EventDisposal disposal)
         {
             disposal.Add(container);
             return container;

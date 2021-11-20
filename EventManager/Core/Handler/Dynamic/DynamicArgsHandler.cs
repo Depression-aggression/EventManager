@@ -1,36 +1,29 @@
-﻿namespace LP.EventManager.Events.Handler
-{
-    using System;
+﻿using System;
+using Depra.EventManager.Core.Dispose;
+using Depra.EventManager.Core.Events.Dynamic;
 
+namespace Depra.EventManager.Core.Handler.Dynamic
+{
     public static class DynamicArgsHandler
     {
-        private static DynamicArgsEvent events = null;
+        private static DynamicArgsEvent _events;
 
-        public static Dispose.Container.DisposeContainer Add(string key, Action<dynamic[]> action)
+        public static DisposeContainer Add(string key, Action<dynamic[]> action)
         {
-            if (events == null)
-            {
-                events = new DynamicArgsEvent();
-            }
-            events .Add(key,action);
+            _events ??= new DynamicArgsEvent();
+            _events.Add(key, action);
 
-            return new Dispose.Container.DisposeContainer(()=>Remove(key,action));
+            return new DisposeContainer(() => Remove(key, action));
         }
 
         public static void Remove(string key, Action<dynamic[]> action)
         {
-            if (events != null)
-            {
-                events.Remove(key,action);
-            }
+            _events?.Remove(key, action);
         }
 
         public static void Invoke(string key, params dynamic[] value)
         {
-            if (events != null)
-            {
-                events.Invoke(key,value);
-            }
-        } 
+            _events?.Invoke(key, value);
+        }
     }
 }

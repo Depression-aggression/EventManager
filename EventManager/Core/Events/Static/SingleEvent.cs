@@ -1,24 +1,25 @@
-﻿namespace LP.EventManager.Events
+﻿using System;
+using System.Collections.Generic;
+using Depra.EventManager.Core.Events.Base;
+
+namespace Depra.EventManager.Core.Events.Static
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public class SingleEvent : Base.EventBase
+    public class SingleEvent : EventBase
     {
-        private Dictionary<string, List<Action>> events = new Dictionary<string, List<Action>>();
+        private readonly Dictionary<string, List<Action>> _events = new Dictionary<string, List<Action>>();
 
         public void Add(string key, Action action)
         {
-            if (!events.ContainsKey(key))
+            if (_events.ContainsKey(key) == false)
             {
-                events.Add(key, new List<Action>());
+                _events.Add(key, new List<Action>());
             }
 
-            events[key].Add(action);
+            _events[key].Add(action);
         }
         public void Remove(string key, Action action)
         {
-            if (events.TryGetValue(key, out var list))
+            if (_events.TryGetValue(key, out var list))
             {
                 list.Remove(action);
             }
@@ -26,12 +27,14 @@
 
         public void Invoke(string key)
         {
-            if (events.TryGetValue(key, out var lastInvokeList))
+            if (_events.TryGetValue(key, out var lastInvokeList) == false)
             {
-                for (int i = 0; i < lastInvokeList.Count; i++)
-                {
-                    lastInvokeList[i]?.Invoke();
-                }
+                return;
+            }
+            
+            foreach (var action in lastInvokeList)
+            {
+                action?.Invoke();
             }
         }
 

@@ -1,36 +1,29 @@
-﻿namespace LP.EventManager.Events.Handler
-{
-    using System;
+﻿using System;
+using Depra.EventManager.Core.Dispose;
+using Depra.EventManager.Core.Events.Static;
 
+namespace Depra.EventManager.Core.Handler.Static
+{
     public static class SingleEventHandler
     {
-        private static SingleEvent singleEvents = null;
+        private static SingleEvent _singleEvents;
 
-        public static Dispose.Container.DisposeContainer Add(string key, Action action)
+        public static DisposeContainer Add(string key, Action action)
         {
-            if (singleEvents == null)
-            {
-                singleEvents = new SingleEvent();
-            }
-            singleEvents.Add(key, action);
+            _singleEvents ??= new SingleEvent();
+            _singleEvents.Add(key, action);
 
-            return new Dispose.Container.DisposeContainer(() => Remove(key, action));
+            return new DisposeContainer(() => Remove(key, action));
         }
 
         public static void Remove(string key, Action action)
         {
-            if (singleEvents != null)
-            {
-                singleEvents.Remove(key, action);
-            }
+            _singleEvents?.Remove(key, action);
         }
 
         public static void Invoke(string key)
         {
-            if (singleEvents != null)
-            {
-                singleEvents.Invoke(key);
-            }
+            _singleEvents?.Invoke(key);
         }
     }
 }

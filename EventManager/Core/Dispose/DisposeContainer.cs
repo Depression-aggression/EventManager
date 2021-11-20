@@ -1,7 +1,7 @@
-﻿namespace LP.EventManager.Events.Dispose.Container
+﻿using System;
+
+namespace Depra.EventManager.Core.Dispose
 {
-    using System;
-    
     public class DisposeContainer
     {
         private Action _disposeAction;
@@ -10,8 +10,7 @@
         {
             _disposeAction = disposeAction;
         }
-
-
+        
         public void Invoke()
         {
             _disposeAction?.Invoke();

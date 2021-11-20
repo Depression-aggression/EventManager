@@ -1,9 +1,6 @@
-﻿namespace LP.EventManager.Events.Base
+﻿namespace Depra.EventManager.Core.Events.Base
 {
-    public class EventBase 
+    public class EventBase
     {
-    
     }
 }
-
-

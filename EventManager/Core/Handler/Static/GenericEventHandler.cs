@@ -1,48 +1,55 @@
-﻿namespace LP.EventManager.Events.Handler
+﻿using System;
+using System.Collections.Generic;
+using Depra.EventManager.Core.Dispose;
+using Depra.EventManager.Core.Events.Base;
+using Depra.EventManager.Core.Events.Static;
+
+namespace Depra.EventManager.Core.Handler.Static
 {
-    using System;
-    using System.Collections.Generic;
-    
     public static class GenericEventHandler
     {
-        private static Dictionary<Type, Base.EventBase> events = new Dictionary<Type, Base.EventBase>();
+        private static readonly Dictionary<Type, EventBase> Events = new Dictionary<Type, EventBase>();
 
-        public static Dispose.Container.DisposeContainer Add<T>(string key, Action<T> action)
+        public static DisposeContainer Add<T>(string key, Action<T> action)
         {
             var type = typeof(T);
-
-            GenericEvent<T> event_ = null;
-            if (!events.ContainsKey(type))
+            
+            GenericEvent<T> genericEvent;
+            if (Events.ContainsKey(type) == false)
             {
-                event_ = new GenericEvent<T>();
-                events.Add(type, event_);
+                genericEvent = new GenericEvent<T>();
+                Events.Add(type, genericEvent);
             }
             else
             {
-                event_ = events[type] as GenericEvent<T>;
+                genericEvent = Events[type] as GenericEvent<T>;
             }
-            
-            event_.Add(key, action);
 
-            return new Dispose.Container.DisposeContainer(()=>Remove(key,action));
+            genericEvent?.Add(key, action);
+
+            return new DisposeContainer(() => Remove(key, action));
         }
 
         public static void Remove<T>(string key, Action<T> action)
         {
-            if (events.TryGetValue(typeof(T), out var baseEvent))
+            if (Events.TryGetValue(typeof(T), out var baseEvent) == false)
             {
-                var tEvent =  baseEvent as GenericEvent<T>;
-                tEvent.Remove(key, action);
+                return;
             }
+
+            var genericEvent = baseEvent as GenericEvent<T>;
+            genericEvent?.Remove(key, action);
         }
 
         public static void Invoke<T>(string key, T arg)
         {
-            if (events.TryGetValue(typeof(T), out var baseEvent))
+            if (Events.TryGetValue(typeof(T), out var baseEvent) == false)
             {
-               var tEvent =  baseEvent as GenericEvent<T>;
-               tEvent.Invoke(key,arg);
+                return;
             }
+            
+            var genericEvent = baseEvent as GenericEvent<T>;
+            genericEvent?.Invoke(key, arg);
         }
     }
 }

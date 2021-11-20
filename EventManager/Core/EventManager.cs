@@ -1,86 +1,91 @@
-﻿namespace LP.EventManager
+﻿using System;
+using Depra.EventManager.Core.Dispose;
+using Depra.EventManager.Core.Handler.Static;
+
+namespace Depra.EventManager.Core
 {
-    using System;
-    
     public static class EventManager
     {
         #region Add events
        
         /// <summary>
-        /// subscribe event
-        /// single event, dont take arguments
+        /// Subscribe event.
+        /// Single event, dont take arguments.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        /// <returns>return dispose container</returns>
-        public static Events.Dispose.Container.DisposeContainer Add(string key, Action action) => Events.Handler.SingleEventHandler.Add(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        /// <returns>Return dispose container</returns>
+        public static DisposeContainer Add(string key, Action action) => SingleEventHandler.Add(key, action);
+        
         /// <summary>
-        /// subscribe event
-        /// Generic event, take T Argument
+        /// Subscribe event.
+        /// Generic event, take T Argument.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        /// <typeparam name="T">argument type</typeparam>
-        /// <returns>return dispose container</returns>
-        public static Events.Dispose.Container.DisposeContainer Add<T>(string key, Action<T> action) => Events.Handler.GenericEventHandler.Add(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        /// <typeparam name="T">Argument type</typeparam>
+        /// <returns>Return dispose container</returns>
+        public static DisposeContainer Add<T>(string key, Action<T> action) => GenericEventHandler.Add(key, action);
 
         /// <summary>
-        /// subscribe event
-        /// take an unspecified amount arguments
+        /// Subscribe event.
+        /// Take an unspecified amount arguments.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        /// <returns>return dispose container</returns>
-        public static Events.Dispose.Container.DisposeContainer Add(string key, Action<object[]> action) => Events.Handler.ObjectArgsHandler.Add(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        /// <returns>Return dispose container</returns>
+        public static DisposeContainer Add(string key, Action<object[]> action) => ObjectArgsHandler.Add(key, action);
        
         #endregion
         
         #region Remove events
        
         /// <summary>
-        /// remove single event
+        /// Remove single event.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        public static void Remove(string key, Action action) => Events.Handler.SingleEventHandler.Remove(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        public static void Remove(string key, Action action) => SingleEventHandler.Remove(key, action);
         
         /// <summary>
-        /// remove generic event
+        /// Remove generic event.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        /// <typeparam name="T">argument type</typeparam>
-        public static void Remove<T>(string key, Action<T> action) => Events.Handler.GenericEventHandler.Remove(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        /// <typeparam name="T">Argument type</typeparam>
+        public static void Remove<T>(string key, Action<T> action) => GenericEventHandler.Remove(key, action);
         
         /// <summary>
-        /// remove unspecified amount event
+        /// Remove unspecified amount event.
         /// </summary>
-        /// <param name="key">string key</param>
-        /// <param name="action">event action</param>
-        public static void Remove(string key, Action<object[]> action) => Events.Handler.ObjectArgsHandler.Remove(key, action);
+        /// <param name="key">String key</param>
+        /// <param name="action">Event action</param>
+        public static void Remove(string key, Action<object[]> action) => ObjectArgsHandler.Remove(key, action);
        
         #endregion
 
         #region Invoke events
         
         /// <summary>
-        /// invoke single event
+        /// Invoke single event.
         /// </summary>
-        /// <param name="key">string event key</param>
-        public static void Invoke(string key) => Events.Handler.SingleEventHandler.Invoke(key);
+        /// <param name="key">String event key</param>
+        public static void Invoke(string key) => SingleEventHandler.Invoke(key);
+        
         /// <summary>
-        /// invoke generic event
+        /// Invoke generic event.
         /// </summary>
-        /// <param name="key">string event key</param>
+        /// <param name="key">String event key</param>
         /// <param name="value">T argument variable</param>
-        /// <typeparam name="T">argument type</typeparam>
-        public static void Invoke<T>(string key, T value) => Events.Handler.GenericEventHandler.Invoke(key, value);
+        /// <typeparam name="T">Argument type</typeparam>
+        public static void Invoke<T>(string key, T value) => GenericEventHandler.Invoke(key, value);
+        
         /// <summary>
-        /// invoke unspecified amount event
+        /// Invoke unspecified amount event.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="value">unspecified amount value</param>
-        public static void Invoke(string key,params object[] value) => Events.Handler.ObjectArgsHandler.Invoke(key, value);
+        /// <param name="key">String event key</param>
+        /// <param name="value">Unspecified amount value</param>
+        public static void Invoke(string key,params object[] value) => ObjectArgsHandler.Invoke(key, value);
         
         #endregion
     }

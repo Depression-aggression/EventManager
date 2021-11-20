@@ -1,23 +1,23 @@
-﻿namespace LP.EventManager.Events.Dispose
-{
-    using System.Collections.Generic;
-    
-    public class EventDisposal 
-    {
-        private readonly List<Container.DisposeContainer> _disposeActions = new List<Container.DisposeContainer>();
+﻿using System.Collections.Generic;
 
-        public void Add(Container.DisposeContainer contaienr_)
+namespace Depra.EventManager.Core.Dispose
+{
+    public class EventDisposal
+    {
+        private readonly List<DisposeContainer> _disposeActions = new List<DisposeContainer>();
+
+        public void Add(DisposeContainer container)
         {
-            _disposeActions.Add(contaienr_);
+            _disposeActions.Add(container);
         }
 
         public void Dispose()
         {
             while (_disposeActions.Count > 0)
             {
-                var contaienr_ = _disposeActions[0];
-                _disposeActions.Remove(contaienr_);
-                contaienr_.Invoke();
+                var container = _disposeActions[0];
+                _disposeActions.Remove(container);
+                container.Invoke();
             }
         }
     }

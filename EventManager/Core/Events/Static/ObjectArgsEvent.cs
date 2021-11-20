@@ -1,37 +1,41 @@
-﻿namespace LP.EventManager.Events
+﻿using System;
+using System.Collections.Generic;
+using Depra.EventManager.Core.Events.Base;
+
+namespace Depra.EventManager.Core.Events.Static
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public class ObjectArgsEvent : Base.EventBase
+    public class ObjectArgsEvent : EventBase
     {
-        private Dictionary<string, List<Action<object[]>>> actions = new Dictionary<string, List<Action<object[]>>>();
-        
+        private readonly Dictionary<string, List<Action<object[]>>> _actions = new Dictionary<string, List<Action<object[]>>>();
         
         public void Add(string key, Action<object[]> action)
         {
-            if (!actions.ContainsKey(key))
+            if (_actions.ContainsKey(key) == false)
             {
-                actions.Add(key, new List<Action<object[]>>());
+                _actions.Add(key, new List<Action<object[]>>());
             }
-            actions[key].Add(action);
+            
+            _actions[key].Add(action);
         }
 
         public void Remove(string key, Action<object[]> action)
         {
-            if (actions.TryGetValue(key, out var val))
+            if (_actions.TryGetValue(key, out var val))
             {
                 val.Remove(action);
             }
         }
-        public void Invoke(string key, params object[] prms)
+        
+        public void Invoke(string key, params object[] parameters)
         {
-            if (actions.TryGetValue(key, out var val))
+            if (_actions.TryGetValue(key, out var actions) == false)
             {
-                for (int i = 0; i < val.Count; i++)
-                {
-                    if(val[i]!=null)val[i](prms);
-                }
+                return;
+            }
+
+            foreach (var action in actions)
+            {
+                action?.Invoke(parameters);
             }
         }
     }

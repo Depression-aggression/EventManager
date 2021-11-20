@@ -1,61 +1,66 @@
-﻿namespace LP.EventManager
+﻿using System;
+using Depra.EventManager.Core.Dispose;
+using Depra.EventManager.Core.Handler.Dynamic;
+
+namespace Depra.EventManager.Core
 {
-    using System;
-    
     public static class DynamicEventManager
     {
         #region Add event
 
         /// <summary>
-        /// subscribe event
-        /// dynamic argument
+        /// Subscribe event.
+        /// Dynamic argument.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="action">event action</param>
-        /// <returns>return dispose container</returns>
-        public static Events.Dispose.Container.DisposeContainer Add(string key, Action<dynamic> action) => Events.Handler.DynamicArgHandler.Add(key, action);
+        /// <param name="key">String event key</param>
+        /// <param name="action">Event action</param>
+        /// <returns>Return dispose container</returns>
+        public static DisposeContainer Add(string key, Action<dynamic> action) => DynamicArgHandler.Add(key, action);
+        
         /// <summary>
-        /// subscribe event
-        /// take an unspecified amount dynamic arguments
+        /// Subscribe event.
+        /// Take an unspecified amount dynamic arguments.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="action">event action</param>
-        /// <returns>return dispose container</returns>
-        public static Events.Dispose.Container.DisposeContainer Add(string key, Action<dynamic[]> action) => Events.Handler.DynamicArgsHandler.Add(key, action);
+        /// <param name="key">String event key</param>
+        /// <param name="action">Event action</param>
+        /// <returns>Return dispose container</returns>
+        public static DisposeContainer Add(string key, Action<dynamic[]> action) => DynamicArgsHandler.Add(key, action);
        
         #endregion
 
         #region Remove event
         
         /// <summary>
-        /// remove dynamic event
+        /// Remove dynamic event.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="action">event action</param>
-        public static void Remove(string key, Action<dynamic> action) => Events.Handler.DynamicArgHandler.Remove(key, action);
+        /// <param name="key">String event key</param>
+        /// <param name="action">Event action</param>
+        public static void Remove(string key, Action<dynamic> action) => DynamicArgHandler.Remove(key, action);
+        
         /// <summary>
-        /// remove unspecified amount dynamics event
+        /// Remove unspecified amount dynamics event.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="action">event action</param>
-        public static void Remove(string key, Action<dynamic[]> action) => Events.Handler.DynamicArgsHandler.Remove(key, action);
+        /// <param name="key">String event key</param>
+        /// <param name="action">Event action</param>
+        public static void Remove(string key, Action<dynamic[]> action) => DynamicArgsHandler.Remove(key, action);
         
         #endregion
         
         #region Invoke event
         
         /// <summary>
-        /// invoke dynamic events
+        /// Invoke dynamic events.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="value">dynamic argument</param>
-        public static void Invoke(string key, dynamic value) => Events.Handler.DynamicArgHandler.Invoke(key, value);
+        /// <param name="key">String event key</param>
+        /// <param name="value">Dynamic argument</param>
+        public static void Invoke(string key, dynamic value) => DynamicArgHandler.Invoke(key, value);
+        
         /// <summary>
-        /// invoke unspecified amount dynamics event
+        /// Invoke unspecified amount dynamics event.
         /// </summary>
-        /// <param name="key">string event key</param>
-        /// <param name="value">dynamic arguments</param>
-        public static void Invoke(string key, params dynamic[] value) => Events.Handler.DynamicArgsHandler.Invoke(key, value);
+        /// <param name="key">String event key</param>
+        /// <param name="value">Dynamic arguments</param>
+        public static void Invoke(string key, params dynamic[] value) => DynamicArgsHandler.Invoke(key, value);
         
         #endregion
     }
