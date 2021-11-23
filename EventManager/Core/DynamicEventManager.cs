@@ -60,7 +60,7 @@ namespace Depra.EventManager.Core
         /// </summary>
         /// <param name="key">String event key</param>
         /// <param name="value">Dynamic arguments</param>
-        public static void Invoke(string key, params dynamic[] value) => DynamicArgsHandler.Invoke(key, value);
+        public static void InvokeArray(string key, params dynamic[] value) => DynamicArgsHandler.Invoke(key, value);
         
         #endregion
     }

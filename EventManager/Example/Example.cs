@@ -41,17 +41,17 @@ public class Example : MonoBehaviour
 
    private void ExampleInvokeEvents()
    {
-      EventManager.Invoke("Example1");
+      EventManager.InvokeArray("Example1");
 
-      EventManager.Invoke("Example2", 1);
+      EventManager.InvokeArray("Example2", 1);
       
-      EventManager.Invoke("Example3", 1, 2, "example_data");
+      EventManager.InvokeArray("Example3", 1, 2, "example_data");
       
       DynamicEventManager.Invoke("Example4", "example_data");
       
       DynamicEventManager.Invoke("Example4", 1);
 
-      DynamicEventManager.Invoke("Example5", 1, 2, "example_data");
+      DynamicEventManager.InvokeArray("Example5", 1, 2, "example_data");
    }
 
    private void OnDestroy()

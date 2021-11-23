@@ -85,7 +85,7 @@ namespace Depra.EventManager.Core
         /// </summary>
         /// <param name="key">String event key</param>
         /// <param name="value">Unspecified amount value</param>
-        public static void Invoke(string key,params object[] value) => ObjectArgsHandler.Invoke(key, value);
+        public static void InvokeArray(string key,params object[] value) => ObjectArgsHandler.Invoke(key, value);
         
         #endregion
     }

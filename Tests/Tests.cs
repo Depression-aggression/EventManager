@@ -1,6 +1,7 @@
 using Depra.EventManager.Core;
 using Depra.EventManager.Core.Dispose;
 using NUnit.Framework;
+using UnityEngine;
 
 public class Tests
 {
@@ -30,7 +31,7 @@ public class Tests
             flag = true;
         }).AddTo(_disposal);;
         
-        EventManager.Invoke("Objects");
+        EventManager.InvokeArray("Objects");
         _disposal.Dispose();
         
         Assert.IsTrue(flag);
@@ -45,7 +46,7 @@ public class Tests
             flag = true;
         }).AddTo(_disposal);
         
-        DynamicEventManager.Invoke("Dynamic");
+        DynamicEventManager.InvokeArray("Dynamic");
         _disposal.Dispose();
         
         Assert.IsTrue(flag);
