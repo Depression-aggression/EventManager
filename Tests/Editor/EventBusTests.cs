@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Depra.EventSystem.Core.Bus;
-using Depra.EventSystem.Core.Bus.Configuration;
-using Depra.EventSystem.Core.Events.Base;
+using Depra.EventSystem.Runtime.Core.Bus;
+using Depra.EventSystem.Runtime.Core.Bus.Configuration;
+using Depra.EventSystem.Runtime.Core.Events.Base;
 using NUnit.Framework;
 
 namespace Depra.EventSystem.Tests.Editor
