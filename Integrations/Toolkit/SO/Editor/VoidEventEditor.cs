@@ -1,10 +1,10 @@
-﻿using Depra.EventSystem.Runtime.ScriptableEvents.Events;
+﻿using Depra.EventSystem.Integrations.Toolkit.SO.Events;
 using UnityEditor;
 using UnityEngine;
 
-namespace Depra.EventSystem.Runtime.ScriptableEvents.Editor
+namespace Depra.EventSystem.Integrations.Toolkit.SO.Editor
 {
-    [CustomEditor(typeof(VoidEvent))]
+    [CustomEditor(typeof(VoidGameEvent))]
     public class VoidEventEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -15,7 +15,7 @@ namespace Depra.EventSystem.Runtime.ScriptableEvents.Editor
 
             if (GUILayout.Button("Invoke"))
             {
-                var gameEvent = target as VoidEvent;
+                var gameEvent = target as VoidGameEvent;
                 gameEvent.Invoke();
             }
         }

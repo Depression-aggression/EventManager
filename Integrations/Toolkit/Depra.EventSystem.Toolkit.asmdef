@@ -1,0 +1,20 @@
+{
+    "name": "Depra.EventSystem.Toolkit",
+    "rootNamespace": "",
+    "references": [
+        "GUID:bcd71dea11b69754dbd0be90b57db9b7",
+        "GUID:a3822bca23adf36478408180b729a040",
+        "GUID:d530f69b1790ca047af230a9629b8c98",
+        "GUID:31976cc9e85bdd9459e856fcb40d0d50",
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
