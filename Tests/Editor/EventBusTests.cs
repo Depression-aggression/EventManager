@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Depra.EventSystem.Core.Bus;
-using Depra.EventSystem.Runtime.Core.Bus;
-using Depra.EventSystem.Runtime.Core.Bus.Configuration;
+using Depra.EventSystem.Runtime.Bus;
+using Depra.EventSystem.Runtime.Bus.Configuration;
 using Depra.EventSystem.Runtime.Core.Events.Base;
 using NUnit.Framework;
 
@@ -149,7 +148,7 @@ namespace Depra.EventSystem.Tests.Editor
         }
     }
 
-    internal class CustomTestEvent : EventBase
+    internal class CustomTestEvent : IEvent
     {
         public string Name { get; set; }
         public int Identifier { get; set; }

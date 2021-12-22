@@ -4,7 +4,7 @@ using Depra.EventSystem.Runtime.Core.Events.Base;
 
 namespace Depra.EventSystem.Runtime.Core.Events.Static
 {
-    public class FuncEvent<T> : EventBase
+    public class FuncEvent<T> : IEvent
     {
         private readonly Dictionary<string, List<Func<T>>> _delegates = new Dictionary<string, List<Func<T>>>();
 

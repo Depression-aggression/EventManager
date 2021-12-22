@@ -1,6 +1,6 @@
 using Depra.EventSystem.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Core.Bus.Interfaces
+namespace Depra.EventSystem.Runtime.Bus.Interfaces
 {
     public interface ISubscription
     {
@@ -13,6 +13,6 @@ namespace Depra.EventSystem.Runtime.Core.Bus.Interfaces
         /// Publish to the subscriber
         /// </summary>
         /// <param name="eventBase"></param>
-        void Publish(EventBase eventBase);
+        void Publish(IEvent eventBase);
     }
 }

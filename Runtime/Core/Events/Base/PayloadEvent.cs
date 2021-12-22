@@ -3,7 +3,7 @@ namespace Depra.EventSystem.Runtime.Core.Events.Base
     /// <summary>
     /// Generic event with payload
     /// </summary>
-    public class PayloadEvent<TPayload> : EventBase
+    public class PayloadEvent<TPayload> : IEvent
     {
         /// <summary>
         /// The Payload for this event.

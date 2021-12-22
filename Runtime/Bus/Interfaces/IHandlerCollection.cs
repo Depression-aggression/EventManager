@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Depra.EventSystem.Core.Bus.Interfaces;
 
-namespace Depra.EventSystem.Runtime.Core.Bus.Interfaces
+namespace Depra.EventSystem.Runtime.Bus.Interfaces
 {
     public interface IHandlerCollection
     {

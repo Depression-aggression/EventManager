@@ -1,4 +1,4 @@
-﻿namespace Depra.EventSystem.Runtime.Core.Bus.Configuration
+﻿namespace Depra.EventSystem.Runtime.Bus.Configuration
 {
     public interface IEventBusConfiguration
     {

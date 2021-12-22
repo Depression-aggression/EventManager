@@ -1,8 +1,7 @@
 using System;
-using Depra.EventSystem.Runtime.Core.Bus;
 using Depra.EventSystem.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Core.Bus.Interfaces
+namespace Depra.EventSystem.Runtime.Bus.Interfaces
 {
     /// <summary>
     /// Defines an interface to subscribe and publish events
@@ -12,10 +11,10 @@ namespace Depra.EventSystem.Core.Bus.Interfaces
         /// <summary>
         /// Subscribes to the specified event type with the specified action.
         /// </summary>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="action">The Action to invoke when an event of this type is published</param>
         /// <returns>A <see cref="SubscriptionToken"/> to be used when calling <see cref="Unsubscribe"/></returns>
-        SubscriptionToken Subscribe<TEventBase>(Action<TEventBase> action) where TEventBase : EventBase;
+        SubscriptionToken Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent;
 
         /// <summary>
         /// Unsubscribe from the Event type related to the specified <see cref="SubscriptionToken"/>
@@ -24,27 +23,27 @@ namespace Depra.EventSystem.Core.Bus.Interfaces
         void Unsubscribe(SubscriptionToken token);
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type.
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type.
         /// </summary>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
-        void Publish<TEventBase>(TEventBase eventItem) where TEventBase : EventBase;
+        void Publish<TEvent>(TEvent eventItem) where TEvent : IEvent;
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type asychronously.
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously.
         /// </summary>
         /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
-        void PublishAsync<TEventBase>(TEventBase eventItem) where TEventBase : EventBase;
+        void PublishAsync<TEvent>(TEvent eventItem) where TEvent : IEvent;
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type asychronously.
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously.
         /// </summary>
         /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
         /// <param name="callback"><see cref="AsyncCallback"/> that is called on completion</param>
-        void PublishAsync<TEventBase>(TEventBase eventItem, AsyncCallback callback) where TEventBase : EventBase;
+        void PublishAsync<TEvent>(TEvent eventItem, AsyncCallback callback) where TEvent : IEvent;
     }
 }

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Depra.EventSystem.Core.Bus;
-using Depra.EventSystem.Core.Bus.Interfaces;
-using Depra.EventSystem.Runtime.Core.Bus.Configuration;
-using Depra.EventSystem.Runtime.Core.Bus.Interfaces;
+using Depra.EventSystem.Runtime.Bus.Configuration;
+using Depra.EventSystem.Runtime.Bus.Interfaces;
 using Depra.EventSystem.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Core.Bus
+namespace Depra.EventSystem.Runtime.Bus
 {
     /// <summary>
     /// Implements <see cref="IEventBus"/>.
@@ -17,9 +15,9 @@ namespace Depra.EventSystem.Runtime.Core.Bus
     {
         private readonly IEventBusConfiguration _eventBusConfiguration;
         private readonly Dictionary<Type, List<ISubscription>> _subscriptions;
-        
+
         private static readonly object SubscriptionsLock = new object();
-        
+
         public EventBus(IEventBusConfiguration configuration = null)
         {
             _eventBusConfiguration = configuration ?? EventBusConfiguration.Default;
@@ -29,10 +27,10 @@ namespace Depra.EventSystem.Runtime.Core.Bus
         /// <summary>
         /// Subscribes to the specified event type with the specified action
         /// </summary>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="action">The Action to invoke when an event of this type is published</param>
         /// <returns>A <see cref="SubscriptionToken"/> to be used when calling <see cref="Unsubscribe"/></returns>
-        public SubscriptionToken Subscribe<TEventBase>(Action<TEventBase> action) where TEventBase : EventBase
+        public SubscriptionToken Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent
         {
             if (action == null)
             {
@@ -41,14 +39,14 @@ namespace Depra.EventSystem.Runtime.Core.Bus
 
             lock (SubscriptionsLock)
             {
-                if (_subscriptions.ContainsKey(typeof(TEventBase)) == false)
+                if (_subscriptions.ContainsKey(typeof(TEvent)) == false)
                 {
-                    _subscriptions.Add(typeof(TEventBase), new List<ISubscription>());
+                    _subscriptions.Add(typeof(TEvent), new List<ISubscription>());
                 }
 
-                var token = new SubscriptionToken(typeof(TEventBase));
-                _subscriptions[typeof(TEventBase)].Add(new Subscription<TEventBase>(action, token));
-                
+                var token = new SubscriptionToken(typeof(TEvent));
+                _subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(action, token));
+
                 return token;
             }
         }
@@ -70,9 +68,11 @@ namespace Depra.EventSystem.Runtime.Core.Bus
                 {
                     return;
                 }
-                
+
                 var allSubscriptions = _subscriptions[token.EventItemType];
-                var subscriptionToRemove = allSubscriptions.FirstOrDefault(x => x.SubscriptionToken.Token == token.Token);
+                var subscriptionToRemove =
+                    allSubscriptions.FirstOrDefault(x => x.SubscriptionToken.Token == token.Token);
+
                 if (subscriptionToRemove != null)
                 {
                     _subscriptions[token.EventItemType].Remove(subscriptionToRemove);
@@ -81,11 +81,11 @@ namespace Depra.EventSystem.Runtime.Core.Bus
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type
         /// </summary>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
-        public void Publish<TEventBase>(TEventBase eventItem) where TEventBase : EventBase
+        public void Publish<TEvent>(TEvent eventItem) where TEvent : IEvent
         {
             if (eventItem == null)
             {
@@ -95,9 +95,9 @@ namespace Depra.EventSystem.Runtime.Core.Bus
             var allSubscriptions = new List<ISubscription>();
             lock (SubscriptionsLock)
             {
-                if (_subscriptions.ContainsKey(typeof(TEventBase)))
+                if (_subscriptions.ContainsKey(typeof(TEvent)))
                 {
-                    allSubscriptions = _subscriptions[typeof(TEventBase)].ToList();
+                    allSubscriptions = _subscriptions[typeof(TEvent)].ToList();
                 }
             }
 
@@ -119,38 +119,38 @@ namespace Depra.EventSystem.Runtime.Core.Bus
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type asychronously
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously
         /// </summary>
         /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
-        public void PublishAsync<TEventBase>(TEventBase eventItem) where TEventBase : EventBase
+        public void PublishAsync<TEvent>(TEvent eventItem) where TEvent : IEvent
         {
             PublishAsyncInternal(eventItem, null);
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEventBase"/> event type asychronously
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously
         /// </summary>
         /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
-        /// <typeparam name="TEventBase">The type of event</typeparam>
+        /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
         /// <param name="callback"><see cref="AsyncCallback"/> that is called on completion</param>
-        public void PublishAsync<TEventBase>(TEventBase eventItem, AsyncCallback callback) where TEventBase : EventBase
+        public void PublishAsync<TEvent>(TEvent eventItem, AsyncCallback callback) where TEvent : IEvent
         {
             PublishAsyncInternal(eventItem, callback);
         }
 
         #region Private Methods
-        
-        private void PublishAsyncInternal<TEventBase>(TEventBase eventItem, AsyncCallback callback) where TEventBase : EventBase
+
+        private void PublishAsyncInternal<TEvent>(TEvent eventItem, AsyncCallback callback) where TEvent : IEvent
         {
             var publishTask = new Task<bool>(() =>
             {
                 Publish(eventItem);
                 return true;
             });
-            
+
             publishTask.Start();
             if (callback == null)
             {
@@ -172,6 +172,7 @@ namespace Depra.EventSystem.Runtime.Core.Bus
                 {
                     tcs.TrySetResult(t.Result);
                 }
+
                 callback?.Invoke(tcs.Task);
             }, TaskScheduler.Default);
         }

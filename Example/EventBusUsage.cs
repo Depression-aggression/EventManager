@@ -1,4 +1,4 @@
-﻿using Depra.EventSystem.Runtime.Core.Bus;
+﻿using Depra.EventSystem.Runtime.Bus;
 using UnityEngine;
 
 namespace Depra.EventSystem.Example

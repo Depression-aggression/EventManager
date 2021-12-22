@@ -1,6 +1,6 @@
 using System;
 
-namespace Depra.EventSystem.Runtime.Core.Bus
+namespace Depra.EventSystem.Runtime.Bus
 {
     /// <summary>
     /// A Token representing a Subscription

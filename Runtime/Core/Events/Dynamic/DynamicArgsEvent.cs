@@ -4,7 +4,7 @@ using Depra.EventSystem.Runtime.Core.Events.Base;
 
 namespace Depra.EventSystem.Runtime.Core.Events.Dynamic
 {
-    public class DynamicArgsEvent : EventBase
+    public class DynamicArgsEvent : IEvent
     {
         private readonly Dictionary<string, List<Action<dynamic[]>>> _actions = new Dictionary<string, List<Action<dynamic[]>>>();
 

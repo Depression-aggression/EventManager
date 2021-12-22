@@ -1,4 +1,4 @@
-namespace Depra.EventSystem.Runtime.Core.Bus.Enums
+namespace Depra.EventSystem.Runtime.Bus.Enums
 {
     /// <summary>
     /// Handler priority. Handlers with higher priority are called first

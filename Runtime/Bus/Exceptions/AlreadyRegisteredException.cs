@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using Depra.EventSystem.Core.Bus.Interfaces;
+using Depra.EventSystem.Runtime.Bus.Interfaces;
 
-namespace Depra.EventSystem.Runtime.Core.Bus.Exceptions
+namespace Depra.EventSystem.Runtime.Bus.Exceptions
 {
     /// <summary>
     /// Is thrown, when attempting to register proxy, that is already registered

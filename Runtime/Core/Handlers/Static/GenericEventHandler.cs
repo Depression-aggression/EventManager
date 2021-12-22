@@ -8,7 +8,7 @@ namespace Depra.EventSystem.Runtime.Core.Handlers.Static
 {
     public static class GenericEventHandler
     {
-        private static readonly Dictionary<Type, EventBase> Events = new Dictionary<Type, EventBase>();
+        private static readonly Dictionary<Type, IEvent> Events = new Dictionary<Type, IEvent>();
 
         public static DisposeContainer Add<T>(string key, Action<T> action)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Depra.EventSystem.Runtime.Core.Bus.Exceptions
+namespace Depra.EventSystem.Runtime.Bus.Exceptions
 {
     /// <summary>
     /// Is thrown when no handler is found for particular message

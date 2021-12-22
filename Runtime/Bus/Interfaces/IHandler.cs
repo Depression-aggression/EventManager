@@ -1,8 +1,8 @@
 ﻿using System;
-using Depra.EventSystem.Runtime.Core.Bus.Enums;
+using Depra.EventSystem.Runtime.Bus.Enums;
 using Depra.EventSystem.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Core.Bus.Interfaces
+namespace Depra.EventSystem.Runtime.Bus.Interfaces
 {
     public interface IHandler
     {
@@ -13,7 +13,7 @@ namespace Depra.EventSystem.Runtime.Core.Bus.Interfaces
         HandlerPriority Priority { get; }
     }
 
-    public interface IHandler<TEvent> : IHandler where TEvent : EventBase
+    public interface IHandler<TEvent> : IHandler where TEvent : IEvent
     {
         /// <summary>
         /// Handler action

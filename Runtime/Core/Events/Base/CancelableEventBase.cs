@@ -3,7 +3,7 @@
     /// <summary>
     /// The base class for all cancelable events
     /// </summary>
-    public abstract class CancelableEventBase : EventBase
+    public abstract class CancelableEventBase : IEvent
     {
         public bool Canceled { get; set; } = false;
 
