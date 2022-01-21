@@ -2,35 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Depra.EventSystem.Runtime.Bus.Configuration;
-using Depra.EventSystem.Runtime.Bus.Interfaces;
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Bus.Configuration;
+using Depra.Events.Runtime.Bus.Interfaces;
+using Depra.Events.Runtime.Bus.Subscription;
+using Depra.Events.Runtime.Bus.Subscription.Tokens;
+using Depra.Events.Runtime.Bus.Subscription.Tokens.Base;
+using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Core.Subscription;
+using Depra.Events.Runtime.Core.Subscription.Containers;
+using Depra.Events.Runtime.Core.Subscription.Interfaces;
+using Depra.Events.Runtime.Core.Subscription.Tokens.Base;
 
-namespace Depra.EventSystem.Runtime.Bus
+namespace Depra.Events.Runtime.Bus
 {
+    internal class BusSubscriptionContainer : Dictionary<Type, List<ISubscription<IEvent>>>,
+        ISubscriptionContainer<ISubscription<IEvent>, Type>
+    {
+    }
+    
     /// <summary>
     /// Implements <see cref="IEventBus"/>.
     /// </summary>
     public class EventBus : IEventBus
     {
-        private readonly IEventBusConfiguration _eventBusConfiguration;
-        private readonly Dictionary<Type, List<ISubscription>> _subscriptions;
+        private readonly BusSubscriptionContainer _subscriptions;
+        private readonly IEventHandlerConfiguration _eventHandlerConfiguration;
 
         private static readonly object SubscriptionsLock = new object();
 
-        public EventBus(IEventBusConfiguration configuration = null)
+        public EventBus(IEventHandlerConfiguration configuration = null)
         {
-            _eventBusConfiguration = configuration ?? EventBusConfiguration.Default;
-            _subscriptions = new Dictionary<Type, List<ISubscription>>();
+            _eventHandlerConfiguration = configuration ?? EventHandlerConfiguration.Default;
+            _subscriptions = new BusSubscriptionContainer();
         }
 
         /// <summary>
-        /// Subscribes to the specified event type with the specified action
+        /// Subscribes to the specified event type with the specified action.
         /// </summary>
         /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="action">The Action to invoke when an event of this type is published</param>
         /// <returns>A <see cref="SubscriptionToken"/> to be used when calling <see cref="Unsubscribe"/></returns>
-        public SubscriptionToken Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent
+        public SubscriptionResult Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent
         {
             if (action == null)
             {
@@ -39,15 +52,21 @@ namespace Depra.EventSystem.Runtime.Bus
 
             lock (SubscriptionsLock)
             {
-                if (_subscriptions.ContainsKey(typeof(TEvent)) == false)
+                var eventType = typeof(TEvent);
+
+                if (_subscriptions.ContainsKey(eventType) == false)
                 {
-                    _subscriptions.Add(typeof(TEvent), new List<ISubscription>());
+                    _subscriptions.Add(eventType, new List<ISubscription<IEvent>>());
                 }
 
-                var token = new SubscriptionToken(typeof(TEvent));
-                _subscriptions[typeof(TEvent)].Add(new Subscription<TEvent>(action, token));
+                var token = new StringToken("", eventType); 
+                //_eventHandlerConfiguration.GenerateToken(eventType);
+                var subscription = new Subscription<TEvent>(action, token);
+                _subscriptions[eventType].Add(subscription);
 
-                return token;
+                var result = new SubscriptionResult(token, new DisposeContainer(null));
+
+                return result;
             }
         }
 
@@ -55,7 +74,7 @@ namespace Depra.EventSystem.Runtime.Bus
         /// Unsubscribe from the Event type related to the specified <see cref="SubscriptionToken"/>
         /// </summary>
         /// <param name="token">The <see cref="SubscriptionToken"/> received from calling the Subscribe method</param>
-        public void Unsubscribe(SubscriptionToken token)
+        public void Unsubscribe(ISubscriptionToken token)
         {
             if (token == null)
             {
@@ -70,8 +89,7 @@ namespace Depra.EventSystem.Runtime.Bus
                 }
 
                 var allSubscriptions = _subscriptions[token.EventItemType];
-                var subscriptionToRemove =
-                    allSubscriptions.FirstOrDefault(x => x.SubscriptionToken.Token == token.Token);
+                var subscriptionToRemove = allSubscriptions.FirstOrDefault(x => x.Equals(token));
 
                 if (subscriptionToRemove != null)
                 {
@@ -81,7 +99,7 @@ namespace Depra.EventSystem.Runtime.Bus
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type.
         /// </summary>
         /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
@@ -92,12 +110,14 @@ namespace Depra.EventSystem.Runtime.Bus
                 throw new ArgumentNullException(nameof(eventItem));
             }
 
-            var allSubscriptions = new List<ISubscription>();
+            var allSubscriptions = new List<ISubscription<IEvent>>();
+            var eventType = typeof(TEvent);
+            
             lock (SubscriptionsLock)
             {
-                if (_subscriptions.ContainsKey(typeof(TEvent)))
+                if (_subscriptions.ContainsKey(eventType))
                 {
-                    allSubscriptions = _subscriptions[typeof(TEvent)].ToList();
+                    allSubscriptions = _subscriptions[eventType].ToList();
                 }
             }
 
@@ -110,7 +130,7 @@ namespace Depra.EventSystem.Runtime.Bus
                 }
                 catch (Exception)
                 {
-                    if (_eventBusConfiguration.ThrowSubscriberException)
+                    if (_eventHandlerConfiguration.ThrowSubscriberException)
                     {
                         throw;
                     }
@@ -119,9 +139,11 @@ namespace Depra.EventSystem.Runtime.Bus
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously.
         /// </summary>
-        /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
+        /// <remarks>
+        /// This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound).
+        /// </remarks>
         /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
         public void PublishAsync<TEvent>(TEvent eventItem) where TEvent : IEvent
@@ -130,9 +152,11 @@ namespace Depra.EventSystem.Runtime.Bus
         }
 
         /// <summary>
-        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously
+        /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type asychronously.
         /// </summary>
-        /// <remarks> This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound) </remarks>
+        /// <remarks>
+        /// This is a wrapper call around the synchronous  method as this method is naturally synchronous (CPU Bound).
+        /// </remarks>
         /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="eventItem">Event to publish</param>
         /// <param name="callback"><see cref="AsyncCallback"/> that is called on completion</param>

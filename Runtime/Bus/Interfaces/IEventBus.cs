@@ -1,10 +1,15 @@
 using System;
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Bus.Subscription;
+using Depra.Events.Runtime.Bus.Subscription.Tokens.Base;
+using Depra.Events.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Bus.Subscription.Tokens;
+using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Core.Subscription.Tokens.Base;
 
-namespace Depra.EventSystem.Runtime.Bus.Interfaces
+namespace Depra.Events.Runtime.Bus.Interfaces
 {
     /// <summary>
-    /// Defines an interface to subscribe and publish events
+    /// Defines an interface to subscribe and publish events.
     /// </summary>
     public interface IEventBus
     {
@@ -14,14 +19,14 @@ namespace Depra.EventSystem.Runtime.Bus.Interfaces
         /// <typeparam name="TEvent">The type of event</typeparam>
         /// <param name="action">The Action to invoke when an event of this type is published</param>
         /// <returns>A <see cref="SubscriptionToken"/> to be used when calling <see cref="Unsubscribe"/></returns>
-        SubscriptionToken Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent;
+        SubscriptionResult Subscribe<TEvent>(Action<TEvent> action) where TEvent : class, IEvent;
 
         /// <summary>
         /// Unsubscribe from the Event type related to the specified <see cref="SubscriptionToken"/>
         /// </summary>
         /// <param name="token">The <see cref="SubscriptionToken"/> received from calling the Subscribe method</param>
-        void Unsubscribe(SubscriptionToken token);
-
+        void Unsubscribe(ISubscriptionToken token);
+ 
         /// <summary>
         /// Publishes the specified event to any subscribers for the <see cref="TEvent"/> event type.
         /// </summary>

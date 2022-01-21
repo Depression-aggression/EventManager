@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Core.Events.Dynamic
+namespace Depra.Events.Runtime.Core.Events.Dynamic
 {
-    public class DynamicArgEvent : IEvent 
+    public class DynamicArgEvent : IEvent
     {
-        private readonly Dictionary<string, List<Action<dynamic>>> _events = new Dictionary<string, List<Action<dynamic>>>();
+        private readonly Dictionary<string, List<Action<dynamic>>> _events;
 
+        public DynamicArgEvent()
+        {
+            _events = new Dictionary<string, List<Action<dynamic>>>();
+        }
+        
         public void Add(string key, Action<dynamic> action)
         {
             if (_events.ContainsKey(key) == false)
             {
-                _events.Add(key,new List<Action<dynamic>>());
+                _events.Add(key, new List<Action<dynamic>>());
             }
+
             _events[key].Add(action);
         }
 

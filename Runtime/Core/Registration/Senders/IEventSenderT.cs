@@ -1,4 +1,4 @@
-﻿namespace Depra.EventSystem.Runtime.Core.Registration.Senders
+﻿namespace Depra.Events.Runtime.Core.Registration.Senders
 {
     public interface IEventSender<in T>
     {

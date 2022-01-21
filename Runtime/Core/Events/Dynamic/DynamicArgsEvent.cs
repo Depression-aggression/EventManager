@@ -1,26 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Core.Events.Dynamic
+namespace Depra.Events.Runtime.Core.Events.Dynamic
 {
+    internal class DynamicSubscriptionContainer : Dictionary<string, List<Action<dynamic[]>>>
+    {
+    }
+    
     public class DynamicArgsEvent : IEvent
     {
-        private readonly Dictionary<string, List<Action<dynamic[]>>> _actions = new Dictionary<string, List<Action<dynamic[]>>>();
+        private readonly DynamicSubscriptionContainer _subscriptions;
 
+        public DynamicArgsEvent()
+        {
+            _subscriptions = new DynamicSubscriptionContainer();
+        }
+        
         public void Add(string key, Action<dynamic[]> action) 
         {
-            if (_actions.ContainsKey(key) == false)
+            if (_subscriptions.ContainsKey(key) == false)
             {
-                _actions.Add(key, new List<Action<dynamic[]>>());
+                _subscriptions.Add(key, new List<Action<dynamic[]>>());
             }
             
-            _actions[key].Add(action);
+            _subscriptions[key].Add(action);
         }
 
         public void Remove(string key, Action<dynamic[]> action)
         {
-            if (_actions.TryGetValue(key, out var val))
+            if (_subscriptions.TryGetValue(key, out var val))
             {
                 val.Remove(action);
             }
@@ -28,7 +37,7 @@ namespace Depra.EventSystem.Runtime.Core.Events.Dynamic
         
         public void Invoke(string key, params dynamic[] parameters)
         {
-            if (_actions.TryGetValue(key, out var actions) == false)
+            if (_subscriptions.TryGetValue(key, out var actions) == false)
             {
                 return;
             }

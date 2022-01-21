@@ -1,6 +1,6 @@
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Core.Events.Base;
 
-namespace Depra.EventSystem.Runtime.Bus.Unity
+namespace Depra.Events.Runtime.Bus.Unity
 {
     public class GlobalEventBus : EventBus
     {

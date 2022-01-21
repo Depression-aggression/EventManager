@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using NUnit.Framework;
 
-namespace Depra.EventSystem.Tests.Editor
+namespace Depra.Events.Tests.Editor
 {
     public class Sandbox
     {

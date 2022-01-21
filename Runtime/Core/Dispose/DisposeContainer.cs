@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Depra.EventSystem.Runtime.Core.Dispose
+namespace Depra.Events.Runtime.Core.Dispose
 {
-    public class DisposeContainer
+    public struct DisposeContainer
     {
         private Action _disposeAction;
 

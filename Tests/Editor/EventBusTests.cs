@@ -1,15 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Depra.EventSystem.Runtime.Bus;
-using Depra.EventSystem.Runtime.Bus.Configuration;
-using Depra.EventSystem.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Bus;
+using Depra.Events.Runtime.Bus.Configuration;
+using Depra.Events.Runtime.Core.Events.Base;
 using NUnit.Framework;
+using UnityEngine;
 
-namespace Depra.EventSystem.Tests.Editor
+namespace Depra.Events.Tests.Editor
 {
+    public class TestObject
+    {
+    }
+
     public class EventBusTests
     {
+        private const string CustomEventName = "Custom Event";
+
         private bool _methodHandlerHit;
         private bool _actionHandlerHit;
 
@@ -20,7 +27,7 @@ namespace Depra.EventSystem.Tests.Editor
             eventBus.Subscribe<CustomTestEvent>(CustomTestEventMethodHandler);
 
             Assert.IsFalse(_methodHandlerHit);
-            eventBus.Publish(new CustomTestEvent { Name = "Custom Event", Identifier = 1 });
+            eventBus.Publish(new CustomTestEvent { Name = CustomEventName, Identifier = 1 });
             Assert.IsTrue(_methodHandlerHit);
         }
 
@@ -31,7 +38,7 @@ namespace Depra.EventSystem.Tests.Editor
             eventBus.Subscribe<CustomTestEvent>(CustomTestEventMethodHandler);
 
             Assert.IsFalse(_methodHandlerHit);
-            eventBus.PublishAsync(new CustomTestEvent { Name = "Custom Event", Identifier = 1 });
+            eventBus.PublishAsync(new CustomTestEvent { Name = CustomEventName, Identifier = 1 });
             Thread.Sleep(500);
             Assert.IsTrue(_methodHandlerHit);
         }
@@ -97,34 +104,35 @@ namespace Depra.EventSystem.Tests.Editor
         public void Unsubscribe_Test()
         {
             var eventBus = new EventBus();
-            var token = eventBus.Subscribe<CustomTestEvent>(s =>
+            var result = eventBus.Subscribe<CustomTestEvent>(s =>
             {
                 Assert.Fail("This should not be executed due to unsubscribing.");
             });
 
-            eventBus.Unsubscribe(token);
+            eventBus.Unsubscribe(result.Token);
             eventBus.Publish(new CustomTestEvent { Name = "Custom Event 3", Identifier = 3 });
         }
 
         [Test]
         public void Publish_Throw_Subscriber_Exception_Test()
         {
-            var eventBus = new EventBus(new EventBusConfiguration { ThrowSubscriberException = true });
+            var eventBus = new EventBus(new EventHandlerConfiguration { ThrowSubscriberException = true });
             bool firstSubscriberHit = false, thirdSubscriberHit = false;
             eventBus.Subscribe<CustomTestEvent>(s => { firstSubscriberHit = true; });
             eventBus.Subscribe<CustomTestEvent>(s => throw new ApplicationException($"Subscriber error"));
             eventBus.Subscribe<CustomTestEvent>(s => { thirdSubscriberHit = true; });
-            
-            var thrownException = Assert.Throws<ApplicationException>(() =>
-            { 
-                eventBus.Publish(new CustomTestEvent());
-            }); // Subscriber exception is thrown.
+
+            var thrownException =
+                Assert.Throws<ApplicationException>(() =>
+                {
+                    eventBus.Publish(new CustomTestEvent());
+                }); // Subscriber exception is thrown.
 
             Assert.AreEqual("Subscriber error", thrownException.Message); // Verify correct message from subscriber
             Assert.IsTrue(firstSubscriberHit); // The first subscriber will be hit
             Assert.IsFalse(thirdSubscriberHit); // Third subscriber will not be hit, missed due to thrown exception.
         }
-        
+
         [Test]
         public void Publish_Dont_Throw_Subscriber_Exception_Test()
         {
@@ -142,7 +150,7 @@ namespace Depra.EventSystem.Tests.Editor
 
         private void CustomTestEventMethodHandler(CustomTestEvent customTestEvent)
         {
-            Assert.AreEqual("Custom Event", customTestEvent.Name);
+            Assert.AreEqual(CustomEventName, customTestEvent.Name);
             Assert.AreEqual(1, customTestEvent.Identifier);
             _methodHandlerHit = true;
         }

@@ -1,4 +1,4 @@
-namespace Depra.EventSystem.Runtime.Core.Registration.Listeners
+namespace Depra.Events.Runtime.Core.Registration.Listeners
 {
     public interface IEventListener<in T> : IEventListener
     {

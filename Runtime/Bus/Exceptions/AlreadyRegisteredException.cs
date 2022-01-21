@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.Serialization;
-using Depra.EventSystem.Runtime.Bus.Interfaces;
+using Depra.Events.Runtime.Bus.Interfaces;
 
-namespace Depra.EventSystem.Runtime.Bus.Exceptions
+namespace Depra.Events.Runtime.Bus.Exceptions
 {
     /// <summary>
-    /// Is thrown, when attempting to register proxy, that is already registered
+    /// Is thrown, when attempting to register proxy, that is already registered.
     /// </summary>
     [Serializable]
     public class AlreadyRegisteredException : Exception

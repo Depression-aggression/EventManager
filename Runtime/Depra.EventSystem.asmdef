@@ -1,7 +1,9 @@
 {
     "name": "Depra.EventSystem",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:a344d304b73c12044bacde5ea024459c"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

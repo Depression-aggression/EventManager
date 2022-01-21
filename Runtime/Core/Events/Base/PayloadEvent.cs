@@ -1,4 +1,4 @@
-namespace Depra.EventSystem.Runtime.Core.Events.Base
+namespace Depra.Events.Runtime.Core.Events.Base
 {
     /// <summary>
     /// Generic event with payload

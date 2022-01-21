@@ -1,7 +1,7 @@
-﻿using Depra.EventSystem.Runtime.Bus;
+﻿using Depra.Events.Runtime.Bus;
 using UnityEngine;
 
-namespace Depra.EventSystem.Example
+namespace Depra.Events.Example
 {
     public class EventBusUsage : MonoBehaviour
     {

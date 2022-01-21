@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Depra.EventSystem.Runtime.Bus.Exceptions
+namespace Depra.Events.Runtime.Bus.Exceptions
 {
     /// <summary>
-    /// Is thrown when no handler is found for particular message
+    /// Is thrown when no handler is found for particular message.
     /// </summary>
     [Serializable]
     public class TypeNotRegisteredException : Exception

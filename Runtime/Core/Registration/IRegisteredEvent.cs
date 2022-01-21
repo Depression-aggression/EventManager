@@ -1,7 +1,7 @@
-﻿using Depra.EventSystem.Runtime.Core.Events.Base;
-using Depra.EventSystem.Runtime.Core.Registration.Listeners;
+﻿using Depra.Events.Runtime.Core.Events.Base;
+using Depra.Events.Runtime.Core.Registration.Listeners;
 
-namespace Depra.EventSystem.Integrations.Toolkit.SO.Events
+namespace Depra.Events.Integrations.Toolkit.SO.Events
 {
     public interface IRegisteredEvent<T> : IEvent
     {

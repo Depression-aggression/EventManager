@@ -1,6 +1,6 @@
-﻿using Depra.EventSystem.Runtime.Core.Registration.Listeners;
+﻿using Depra.Events.Runtime.Core.Registration.Listeners;
 
-namespace Depra.EventSystem.Runtime.Core.Registration.Containers
+namespace Depra.Events.Runtime.Core.Registration.Containers
 {
     public interface IEventListenerContainer : IEventListener
     {

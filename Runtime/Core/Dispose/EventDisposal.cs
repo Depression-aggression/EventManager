@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Depra.EventSystem.Runtime.Core.Dispose
+namespace Depra.Events.Runtime.Core.Dispose
 {
-    public class EventDisposal
+    public class EventDisposal : IDisposable
     {
-        private readonly List<DisposeContainer> _disposeActions = new List<DisposeContainer>();
+        private readonly List<DisposeContainer> _disposeActions;
 
+        public EventDisposal()
+        {
+            _disposeActions = new List<DisposeContainer>();
+        }
+        
         public void Add(DisposeContainer container)
         {
             _disposeActions.Add(container);

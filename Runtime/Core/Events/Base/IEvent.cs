@@ -1,7 +1,7 @@
-﻿namespace Depra.EventSystem.Runtime.Core.Events.Base
+﻿namespace Depra.Events.Runtime.Core.Events.Base
 {
     /// <summary>
-    /// The base class for all events.
+    /// The base definitions for all events.
     /// </summary>
     public interface IEvent
     {

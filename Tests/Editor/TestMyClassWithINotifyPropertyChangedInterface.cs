@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Depra.EventSystem.Tests
+namespace Depra.Events.Tests
 {
     public class TestMyClassWithINotifyPropertyChangedInterface : INotifyPropertyChanged
     {

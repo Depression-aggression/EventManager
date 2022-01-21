@@ -1,8 +1,8 @@
-﻿using Depra.EventSystem.Runtime.Core.Dispose;
-using Depra.EventSystem.Runtime.Core.Managers;
+﻿using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Managers;
 using NUnit.Framework;
 
-namespace Depra.EventSystem.Tests.Editor
+namespace Depra.Events.Tests.Editor
 {
     public class DynamicEventsTests
     {
@@ -29,9 +29,11 @@ namespace Depra.EventSystem.Tests.Editor
             DynamicEventManager.Add("DynamicA", dynamic => { eventARaised = true; }).AddTo(_disposal);
             DynamicEventManager.Add("DynamicB", dynamic => { eventBRaised = true; }).AddTo(_disposal);
         
+            Assert.IsFalse(eventARaised);
             DynamicEventManager.InvokeArray("DynamicA");
             Assert.IsTrue(eventARaised);
         
+            Assert.IsFalse(eventBRaised);
             DynamicEventManager.InvokeArray("DynamicB");
             Assert.IsTrue(eventBRaised);
         }

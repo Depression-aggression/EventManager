@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Depra.EventSystem.Tests.Editor
+namespace Depra.Events.Tests.Editor
 {
     public class UniRxTests : MonoBehaviour
     {

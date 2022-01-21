@@ -1,13 +1,14 @@
-using System;
-using Depra.EventSystem.Runtime.Core.Dispose;
-using Depra.EventSystem.Runtime.Core.Managers;
+using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Managers;
 using NUnit.Framework;
 
-namespace Depra.EventSystem.Tests.Editor
+namespace Depra.Events.Tests.Editor
 {
     public class StaticEventsTests
     {
         private EventDisposal _disposal;
+
+        private bool _actionHandlerHit;
 
         [SetUp]
         public void Setup()
@@ -27,29 +28,33 @@ namespace Depra.EventSystem.Tests.Editor
             var eventARaised = false;
             var eventBRaised = false;
 
-            EventManager.Add("SingleA", () => { eventARaised = true; }).AddTo(_disposal);
-            EventManager.Add("SingleB", () => { eventBRaised = true; }).AddTo(_disposal);
+            EventManager.Subscribe("SingleA", () => { eventARaised = true; }).AddTo(_disposal);
+            EventManager.Subscribe("SingleB", () => { eventBRaised = true; }).AddTo(_disposal);
 
-            EventManager.Invoke("SingleA");
+            Assert.IsFalse(eventARaised);
+            EventManager.Publish("SingleA");
             Assert.IsTrue(eventARaised);
 
-            EventManager.Invoke("SingleB");
+            Assert.IsFalse(eventBRaised);
+            EventManager.Publish("SingleB");
             Assert.IsTrue(eventBRaised);
         }
 
         [Test]
-        public void Func_Event_Successfully_Invoked()
+        public void Generic_Event_Successfully_Invoked()
         {
             var eventARaised = false;
             var eventBRaised = false;
 
-            EventManager.Add("FuncA", () => eventARaised = true).AddTo(_disposal);
-            EventManager.Add("FuncB", () => eventBRaised = true).AddTo(_disposal);
+            EventManager.Subscribe<TestObject>("GenericA", _ => { eventARaised = true; }).AddTo(_disposal);
+            EventManager.Subscribe<TestObject>("GenericB", _ => { eventBRaised = true; }).AddTo(_disposal);
 
-            EventManager.Invoke("FuncA");
+            Assert.IsFalse(eventARaised);
+            EventManager.Publish("GenericA", new TestObject());
             Assert.IsTrue(eventARaised);
 
-            EventManager.Invoke("FuncB");
+            Assert.IsFalse(eventBRaised);
+            EventManager.Publish("GenericB", new TestObject());
             Assert.IsTrue(eventBRaised);
         }
 
@@ -59,13 +64,15 @@ namespace Depra.EventSystem.Tests.Editor
             var eventARaised = false;
             var eventBRaised = false;
 
-            EventManager.Add("ObjectsA", objects => { eventARaised = true; }).AddTo(_disposal);
-            EventManager.Add("ObjectsB", objects => { eventBRaised = true; }).AddTo(_disposal);
+            EventManager.Subscribe("ObjectsA", objects => { eventARaised = true; }).AddTo(_disposal);
+            EventManager.Subscribe("ObjectsB", objects => { eventBRaised = true; }).AddTo(_disposal);
 
-            EventManager.InvokeArray("ObjectsA");
+            Assert.IsFalse(eventARaised);
+            EventManager.PublishArray("ObjectsA");
             Assert.IsTrue(eventARaised);
 
-            EventManager.InvokeArray("ObjectsB");
+            Assert.IsFalse(eventBRaised);
+            EventManager.PublishArray("ObjectsB");
             Assert.IsTrue(eventBRaised);
         }
     }

@@ -1,8 +1,8 @@
-﻿using Depra.EventSystem.Runtime.Core.Dispose;
-using Depra.EventSystem.Runtime.Core.Managers;
+﻿using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Managers;
 using UnityEngine;
 
-namespace Depra.EventSystem.Example
+namespace Depra.Events.Example
 {
     public class EventManagerUsage : MonoBehaviour
     {
@@ -15,17 +15,17 @@ namespace Depra.EventSystem.Example
 
         private void ExampleAddEvents()
         {
-            EventManager.Add("Example1", () =>
+            EventManager.Subscribe("Example1", () =>
             {
                 //Example1
             }).AddTo(_disposal);
 
-            EventManager.Add<int>("Example2", intValue =>
+            EventManager.Subscribe<int>("Example2", intValue =>
             {
                 //Example2
             }).AddTo(_disposal);
 
-            EventManager.Add("Example3", objects =>
+            EventManager.Subscribe("Example3", objects =>
             {
                 //Example3
             }).AddTo(_disposal);
@@ -43,11 +43,11 @@ namespace Depra.EventSystem.Example
 
         private void ExampleInvokeEvents()
         {
-            EventManager.InvokeArray("Example1");
+            EventManager.PublishArray("Example1");
 
-            EventManager.InvokeArray("Example2", 1);
+            EventManager.PublishArray("Example2", 1);
 
-            EventManager.InvokeArray("Example3", 1, 2, "example_data");
+            EventManager.PublishArray("Example3", 1, 2, "example_data");
 
             DynamicEventManager.Invoke("Example4", "example_data");
 

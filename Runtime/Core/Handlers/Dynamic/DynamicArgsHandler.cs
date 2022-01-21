@@ -1,8 +1,8 @@
 ﻿using System;
-using Depra.EventSystem.Runtime.Core.Dispose;
-using Depra.EventSystem.Runtime.Core.Events.Dynamic;
+using Depra.Events.Runtime.Core.Dispose;
+using Depra.Events.Runtime.Core.Events.Dynamic;
 
-namespace Depra.EventSystem.Runtime.Core.Handlers.Dynamic
+namespace Depra.Events.Runtime.Core.Handlers.Dynamic
 {
     public static class DynamicArgsHandler
     {
